@@ -60,15 +60,56 @@ while True:
     k = cv.waitKey(5) & 0xFF
     if k == 27:
         break
+    if xr and yr and wr and hr > 0:
+        robot.right()
+        time.sleep(1)
+        robot.forward()
+        time.sleep(1)
+        robot.left()
+        time.sleep(1)
+        robot.forward()
+        time.sleep(1)
+        robot.left()
+        time.sleep(1)
+        robot.forward()
+        time.sleep(1)
+        robot.right()
+        time.sleep(1)
+        robot.stop()
+        print("red")
+        #move
+    elif xg and yg and wg and hg > 0:
+        robot.left()
+        time.sleep(1)
+        robot.forward()
+        time.sleep(1)
+        robot.right()
+        time.sleep(1)
+        robot.forward()
+        time.sleep(1)
+        robot.right()
+        time.sleep(1)
+        robot.forward()
+        time.sleep(1)
+        robot.left()
+        time.sleep(1)
+        robot.stop()
+        print("green")
+        #move
     if distance1 == distance2 or distance2 < distance1:
         robot.right()#turn right first
         time.sleep(1)
         #update cam
         _, frame = cap.read()
+        hsv = cv.cvtColor(frame, cv.COLOR_BGR2HSV)
         maskR = cv.inRange(hsv, lower_red, upper_red)
         redcnts = cv.findContours(maskR.copy(),
                               cv.RETR_EXTERNAL,
                               cv.CHAIN_APPROX_SIMPLE)[-2]
+        maskG = cv.inRange(hsv, lower_green, upper_green)
+        greencnts = cv.findContours(maskG.copy(),
+                                cv.RETR_EXTERNAL,
+                                cv.CHAIN_APPROX_SIMPLE)[-2]
         if len(redcnts)>0:
             red_area = max(redcnts, key=cv.contourArea)
             (xr,yr,wr,hr) = cv.boundingRect(red_area)
@@ -148,8 +189,13 @@ while True:
         #move certain dist
     #update cam
     _, frame = cap.read()
+    hsv = cv.cvtColor(frame, cv.COLOR_BGR2HSV)
     maskR = cv.inRange(hsv, lower_red, upper_red)
     redcnts = cv.findContours(maskR.copy(),
+                            cv.RETR_EXTERNAL,
+                            cv.CHAIN_APPROX_SIMPLE)[-2]
+    maskG = cv.inRange(hsv, lower_green, upper_green)
+    greencnts = cv.findContours(maskG.copy(),
                             cv.RETR_EXTERNAL,
                             cv.CHAIN_APPROX_SIMPLE)[-2]
     if len(redcnts)>0:
