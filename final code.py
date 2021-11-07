@@ -20,15 +20,20 @@ except KeyboardInterrupt:
 GPIO.cleanup()
 turn = 0.6
 count = 0
+rest = 0.1
+forward = 1/80
 robot = Robot(right=(19,16),left=(26,20))
 sensor1 = DistanceSensor(echo=6,trigger=12,max_distance=2.0,threshold_distance=0.3)
 sensor2 = DistanceSensor(echo=17,trigger=18,max_distance=2.0,threshold_distance=0.3)
 
 robot.forward()
-time.sleep(1.1)
+time.sleep(forward*64)
+robot.stop()
+time.sleep(rest)
 robot.right()
 time.sleep(turn)
 robot.stop()
+time.sleep(rest)
 
 while True:
     distance1 = sensor1.distance * 100
@@ -69,43 +74,43 @@ while True:
     k = cv.waitKey(5) & 0xFF
     if k == 27:
         break
-    if xr and yr and wr and hr > 0:
+    if ((xr > 0) or (yr > 0) or (wr > 0) or (hr > 0)):
         robot.right()
         time.sleep(turn)
         robot.forward()
-        time.sleep(0.5)
+        time.sleep(forward*25)
         robot.left()
         time.sleep(turn)
         robot.forward()
-        time.sleep(1)
+        time.sleep(forward*25)
         robot.left()
         time.sleep(turn)
         robot.forward()
-        time.sleep(0.5)
+        time.sleep(forward*25)
         robot.right()
         time.sleep(turn)
         robot.stop()
         print("red")
         #move
-    elif xg and yg and wg and hg > 0:
+    elif ((xg > 0) or (yg > 0) or (wg > 0) or (hg > 0)):
         robot.left()
         time.sleep(turn)
         robot.forward()
-        time.sleep(0.5)
+        time.sleep(forward*25)
         robot.right()
         time.sleep(turn)
         robot.forward()
-        time.sleep(1)
+        time.sleep(forward*25)
         robot.right()
         time.sleep(turn)
         robot.forward()
-        time.sleep(0.5)
+        time.sleep(forward*25)
         robot.left()
         time.sleep(turn)
         robot.stop()
         print("green")
         #move
-    if distance1 == distance2 or distance2 < distance1:
+    if ((distance1 == distance2) or (distance2 < distance1) or ((distance2 >= 20) and (distance2 <= 40))):
         robot.right()#turn right first
         time.sleep(1)
         #update cam
@@ -131,38 +136,38 @@ while True:
             green_area = max(greencnts, key=cv.contourArea)
             (xg,yg,wg,hg) = cv.boundingRect(green_area)
             cv.rectangle(frame,(xg,yg),(xg+wg, yg+hg),(255,255,255),2)
-        if xr and yr and wr and hr > 0: #check for presence of red
+        if ((xr > 0) or (yr > 0) or (wr > 0) or (hr > 0)): #check for presence of red
             #move
             robot.right()
             time.sleep(turn)
             robot.forward()
-            time.sleep(0.5)
+            time.sleep(forward*25)
             robot.left()
             time.sleep(turn)
             robot.forward()
-            time.sleep(1)
+            time.sleep(forward*25)
             robot.left()
             time.sleep(turn)
             robot.forward()
-            time.sleep(0.5)
+            time.sleep(forward*25)
             robot.right()
             time.sleep(turn)
             robot.stop()
             print("red")
-        elif xg and yg and wg and hg > 0: #checks presence of green
+        elif ((xg > 0) or (yg > 0) or (wg > 0) or (hg > 0)): #checks presence of green
             #move
             robot.left()
             time.sleep(turn)
             robot.forward()
-            time.sleep(0.5)
+            time.sleep(forward*25)
             robot.right()
             time.sleep(turn)
             robot.forward()
-            time.sleep(1)
+            time.sleep(forward*25)
             robot.right()
             time.sleep(turn)
             robot.forward()
-            time.sleep(0.5)
+            time.sleep(forward*25)
             robot.left()
             time.sleep(turn)
             robot.stop()
@@ -170,10 +175,10 @@ while True:
     else:
         print("ok")
         robot.forward()
-        time.sleep(1)
+        time.sleep(forward*25)
         robot.stop()
-        N = 0
         '''
+        N = 0
         while N <= 3:
             distance1 = sensor1.distance * 100
             if distance1 > 10:
@@ -225,43 +230,8 @@ while True:
         green_area = max(greencnts, key=cv.contourArea)
         (xg,yg,wg,hg) = cv.boundingRect(green_area)
         cv.rectangle(frame,(xg,yg),(xg+wg, yg+hg),(255,255,255),2)
-    if xr and yr and wr and hr > 0:
-        robot.right()
-        time.sleep(turn)
-        robot.forward()
-        time.sleep(0.5)
-        robot.left()
-        time.sleep(turn)
-        robot.forward()
-        time.sleep(1)
-        robot.left()
-        time.sleep(turn)
-        robot.forward()
-        time.sleep(0.5)
-        robot.right()
-        time.sleep(turn)
-        robot.stop()
-        print("red")
-        #move
-    elif xg and yg and wg and hg > 0:
-        robot.left()
-        time.sleep(turn)
-        robot.forward()
-        time.sleep(0.5)
-        robot.right()
-        time.sleep(turn)
-        robot.forward()
-        time.sleep(1)
-        robot.right()
-        time.sleep(turn)
-        robot.forward()
-        time.sleep(0.5)
-        robot.left()
-        time.sleep(turn)
-        robot.stop()
-        print("green")
         #move
     count += 1
-    if count == 36:
+    if count == 18:
         break
 cv.destroyAllWindows()
