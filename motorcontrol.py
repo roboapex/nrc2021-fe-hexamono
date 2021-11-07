@@ -14,15 +14,23 @@ motor2.backward()
 motor1.backward()
 time.sleep(10)
 '''
-robot = Robot(left=(19,16),right=(26,20))
+robot = Robot(right=(19,16),left=(26,20))
 count = 0
+
+
+robot.forward()
+time.sleep(0.8)
+robot.stop()
+robot.right()
+time.sleep(0.5)
+robot.stop()
+
+'''
 while True:
-    '''
     robot.forward()
-    time.sleep(5)
-    '''
+    time.sleep(0.5)
     robot.left()
-    time.sleep(0.37)
+    time.sleep(0.5)
     robot.stop()
     time.sleep(3)
     robot.right()
@@ -30,5 +38,6 @@ while True:
     robot.stop()
     time.sleep(3)
     count += 1
-    if count >= 5:
+    if count >= 1:
         break
+'''

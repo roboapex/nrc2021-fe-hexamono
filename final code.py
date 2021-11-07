@@ -11,21 +11,30 @@ GPIO.setup(23, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 # now the program will do nothing until the signal on port 23   
 # starts to fall towards zero. This is why we used the pullup  
 # to keep the signal high and prevent a false interrupt  
+'''
 try:  
     GPIO.wait_for_edge(23, GPIO.FALLING)   
 except KeyboardInterrupt:  
     GPIO.cleanup()       # clean up GPIO on CTRL+C exit  
+'''
 GPIO.cleanup()
+turn = 0.6
 count = 0
-robot = Robot(left=(4,14),right=(17,18))
-sensor1 = DistanceSensor(echo=23,trigger=24,max_distance=2.0,threshold_distance=0.3)
-sensor2 = DistanceSensor(echo=27,trigger=22,max_distance=2.0,threshold_distance=0.3)
+robot = Robot(right=(19,16),left=(26,20))
+sensor1 = DistanceSensor(echo=6,trigger=12,max_distance=2.0,threshold_distance=0.3)
+sensor2 = DistanceSensor(echo=17,trigger=18,max_distance=2.0,threshold_distance=0.3)
 
+robot.forward()
+time.sleep(1.1)
+robot.right()
+time.sleep(turn)
+robot.stop()
 
 while True:
     distance1 = sensor1.distance * 100
     distance2 = sensor2.distance * 100
-
+    print(distance1)
+    print(distance2)
     _, frame = cap.read()
     # Convert BGR to HSV
     hsv = cv.cvtColor(frame, cv.COLOR_BGR2HSV)
@@ -62,37 +71,37 @@ while True:
         break
     if xr and yr and wr and hr > 0:
         robot.right()
-        time.sleep(1)
+        time.sleep(turn)
+        robot.forward()
+        time.sleep(0.5)
+        robot.left()
+        time.sleep(turn)
         robot.forward()
         time.sleep(1)
         robot.left()
-        time.sleep(1)
+        time.sleep(turn)
         robot.forward()
-        time.sleep(1)
-        robot.left()
-        time.sleep(1)
-        robot.forward()
-        time.sleep(1)
+        time.sleep(0.5)
         robot.right()
-        time.sleep(1)
+        time.sleep(turn)
         robot.stop()
         print("red")
         #move
     elif xg and yg and wg and hg > 0:
         robot.left()
-        time.sleep(1)
+        time.sleep(turn)
+        robot.forward()
+        time.sleep(0.5)
+        robot.right()
+        time.sleep(turn)
         robot.forward()
         time.sleep(1)
         robot.right()
-        time.sleep(1)
+        time.sleep(turn)
         robot.forward()
-        time.sleep(1)
-        robot.right()
-        time.sleep(1)
-        robot.forward()
-        time.sleep(1)
+        time.sleep(0.5)
         robot.left()
-        time.sleep(1)
+        time.sleep(turn)
         robot.stop()
         print("green")
         #move
@@ -125,42 +134,46 @@ while True:
         if xr and yr and wr and hr > 0: #check for presence of red
             #move
             robot.right()
-            time.sleep(1)
+            time.sleep(turn)
+            robot.forward()
+            time.sleep(0.5)
+            robot.left()
+            time.sleep(turn)
             robot.forward()
             time.sleep(1)
             robot.left()
-            time.sleep(1)
+            time.sleep(turn)
             robot.forward()
-            time.sleep(1)
-            robot.left()
-            time.sleep(1)
-            robot.forward()
-            time.sleep(1)
+            time.sleep(0.5)
             robot.right()
-            time.sleep(1)
+            time.sleep(turn)
             robot.stop()
             print("red")
         elif xg and yg and wg and hg > 0: #checks presence of green
             #move
             robot.left()
-            time.sleep(1)
+            time.sleep(turn)
+            robot.forward()
+            time.sleep(0.5)
+            robot.right()
+            time.sleep(turn)
             robot.forward()
             time.sleep(1)
             robot.right()
-            time.sleep(1)
+            time.sleep(turn)
             robot.forward()
-            time.sleep(1)
-            robot.right()
-            time.sleep(1)
-            robot.forward()
-            time.sleep(1)
+            time.sleep(0.5)
             robot.left()
-            time.sleep(1)
+            time.sleep(turn)
             robot.stop()
             print("green")
     else:
         print("ok")
+        robot.forward()
+        time.sleep(1)
+        robot.stop()
         N = 0
+        '''
         while N <= 3:
             distance1 = sensor1.distance * 100
             if distance1 > 10:
@@ -176,6 +189,7 @@ while True:
                 time.sleep(1)
             distance1 = sensor1.distance * 100
             N += 1
+        
         while distance1 != 10:
             distance1 = sensor1.distance * 100
             if distance1 > 10:
@@ -185,7 +199,8 @@ while True:
             if distance1 < 10:
                 robot.left()
                 time.sleep(0.1)
-            distance1 = sensor1.distance * 100
+            distance1 = sensor1.distance * 10
+            '''
         #move certain dist
     #update cam
     _, frame = cap.read()
@@ -212,37 +227,37 @@ while True:
         cv.rectangle(frame,(xg,yg),(xg+wg, yg+hg),(255,255,255),2)
     if xr and yr and wr and hr > 0:
         robot.right()
-        time.sleep(1)
+        time.sleep(turn)
+        robot.forward()
+        time.sleep(0.5)
+        robot.left()
+        time.sleep(turn)
         robot.forward()
         time.sleep(1)
         robot.left()
-        time.sleep(1)
+        time.sleep(turn)
         robot.forward()
-        time.sleep(1)
-        robot.left()
-        time.sleep(1)
-        robot.forward()
-        time.sleep(1)
+        time.sleep(0.5)
         robot.right()
-        time.sleep(1)
+        time.sleep(turn)
         robot.stop()
         print("red")
         #move
     elif xg and yg and wg and hg > 0:
         robot.left()
-        time.sleep(1)
+        time.sleep(turn)
+        robot.forward()
+        time.sleep(0.5)
+        robot.right()
+        time.sleep(turn)
         robot.forward()
         time.sleep(1)
         robot.right()
-        time.sleep(1)
+        time.sleep(turn)
         robot.forward()
-        time.sleep(1)
-        robot.right()
-        time.sleep(1)
-        robot.forward()
-        time.sleep(1)
+        time.sleep(0.5)
         robot.left()
-        time.sleep(1)
+        time.sleep(turn)
         robot.stop()
         print("green")
         #move
